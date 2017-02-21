@@ -1,0 +1,29 @@
+name: ZenPacks.itri.BmcMonitor
+
+zProperties:
+  zBmcAddress:
+    category: BMC
+    type: string
+
+  zIpmiUsername:
+    category: IPMI
+    type: string
+    default: "admin"
+  
+  zIpmiPassword:
+    category: IPMI
+    type: password
+    default: "admin"
+
+device_classes:
+   /Server/SSH/Linux/NovaHost:
+      zProperties:
+         zPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
+         zIpmiUsername: admin
+         zIpmiPassword: admin
+
+classes:
+   ItriServer:
+      properties:
+         power_status:
+            type: boolean
