@@ -15,15 +15,30 @@ zProperties:
     type: password
     default: "admin"
 
-device_classes:
-   /Server/SSH/Linux/NovaHost:
-      zProperties:
-         zPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
-         zIpmiUsername: admin
-         zIpmiPassword: admin
-
 classes:
-   ItriServer:
+   BmcServer:
+      base: [zenpacklib.Device]
       properties:
          power_status:
             type: boolean
+            label: Power Status
+
+device_classes:
+   /BMC:
+      remove: true
+      zProperties:
+         zPythonClass: ZenPacks.itri.BmcMonitor.BmcServer
+         zIpmiUsername: admin
+         zIpmiPassword: admin
+         zDeviceTemplates: [Device]
+         zCollectorPlugins: [itri.Bmc]
+         zDeviceTemplates: [Device, BMC]
+      templates:
+         BMC:
+            description: Monitoring BMC Devices
+            targetPythonClass: ZenPacks.itri.BmcMonitor.BmcServer
+            datasources:
+               powerStatus:
+                  type: Python
+                  plugin_classname: ZenPacks.itri.BmcMonitor.dsplugins.BmcPowerStatus
+                  cycletime: 30
