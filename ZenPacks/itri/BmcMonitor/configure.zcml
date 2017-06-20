@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
+
+    <!-- Browser -->
+    <browser:resourceDirectory
+        name="aws"
+        directory="resources"
+        />
+
+    <!--
+    <browser:viewlet
+        name="js-powerstatus"
+        paths="/++resource++aws/PowerStatus.js"
+        weight="10"
+        for="ZenPacks.itri.ServerMonitor.ItriServer.ItriServer"
+        manager="Products.ZenUI3.browser.interfaces.IJavaScriptSrcManager"
+        class="Products.ZenUI3.browser.javascript.JavaScriptSrcBundleViewlet"
+        permission="zope2.Public"
+        />
+    -->
+
+</configure>
+

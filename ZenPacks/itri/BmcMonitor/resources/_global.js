@@ -18,17 +18,18 @@ Ext.onReady(function() {
     });
 
     // Obtain the Power Status for each record in the store and assign it to the model
+    /*    
     store.each(function(record){
       Zenoss.remote.DeviceRouter.getInfo({uid: record.data.uid}, function(result){
         record.data.power_status = result.data.power_status;
-        grid.getView().refresh();
+        //grid.getView().refresh();
       });
     });
 
     // Insert the power status column into the device grid
-    grid.headerCt.insert(2, power_status_column);
-    
+    grid.headerCt.insert(2, power_status_column);    
     grid.getView().refresh();
+    */
 
   });
 });
