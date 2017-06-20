@@ -1,15 +1,12 @@
 """Monitors BMC conditions"""
 
-# Logging
 import logging
 log = logging.getLogger('zen.BmcMonitor')
 
-# Twisted Imports
 from twisted.internet.defer import inlineCallbacks, returnValue
 
 from Products.ZenEvents import ZenEventClasses
 
-# PythonCollector Imports
 from Products.DataCollector.plugins.DataMaps import ObjectMap
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
      PythonDataSourcePlugin,
@@ -20,7 +17,6 @@ import subprocess
 class BmcPowerStatus(PythonDataSourcePlugin):
     """BMC power status data source plugin."""
     
-    # List of device attributes needed for collection
     proxy_attributes = (
         'zBmcAddress',
         'zIpmiUsername',
@@ -29,7 +25,6 @@ class BmcPowerStatus(PythonDataSourcePlugin):
  
     @classmethod
     def config_key(cls, datasource, context):
-        log.debug('Entering config_key method')
         return (
             context.device().id,
             datasource.getCycleTime(context),
