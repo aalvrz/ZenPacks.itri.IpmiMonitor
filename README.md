@@ -1,0 +1,1 @@
+# ZenPacks.itri.BmcMonitor
