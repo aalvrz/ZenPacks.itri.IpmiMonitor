@@ -6,7 +6,6 @@ log = logging.getLogger('zen.BmcMonitor')
 from twisted.internet.defer import inlineCallbacks, returnValue
 
 from Products.ZenEvents import ZenEventClasses
-
 from Products.DataCollector.plugins.DataMaps import ObjectMap
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
      PythonDataSourcePlugin,
@@ -42,7 +41,7 @@ class BmcPowerStatus(PythonDataSourcePlugin):
     
     @inlineCallbacks
     def collect(self, config):
-        log.debug("Collect for BMC Power Status ({0})".format(config.id))
+        log.info("Collecting BMC Power Status for {0}".format(config.id))
 
         ds0 = config.datasources[0]
         results = {}
@@ -54,8 +53,8 @@ class BmcPowerStatus(PythonDataSourcePlugin):
             cmd = 'ipmitool -H {0} -I lanplus -U {1} -P {2} power status'.format(ds0.zBmcAddress, ds0.zIpmiUsername, ds0.zIpmiPassword)
             cmd_result = yield subprocess.check_output(cmd, shell=True).rstrip()
             log.info('Power Status for Device {0}: {1}'.format(ds0.zBmcAddress, cmd_result))
-        except:
-            log.error('Error when running ipmitool when collecting Power Status on BMC Address {0}'.format(ds0.zBmcAddress))
+        except Exception as e:
+            log.error('{0}: {1}'.format(ds0.zBmcAddress, e))
 
         if cmd_result == 'Chassis Power is on':
             power_status = True
