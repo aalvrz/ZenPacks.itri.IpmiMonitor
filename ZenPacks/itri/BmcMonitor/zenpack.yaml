@@ -15,28 +15,15 @@ zProperties:
     type: password
     default: "admin"
 
-classes:
-   BmcServer:
-      base: [zenpacklib.Device]
-      properties:
-         power_status:
-            type: boolean
-            label: Power Status
-
 device_classes:
-   /BMC:
-      remove: true
+   /Server:
       zProperties:
-         zPythonClass: ZenPacks.itri.BmcMonitor.BmcServer
          zIpmiUsername: admin
          zIpmiPassword: admin
-         zDeviceTemplates: [Device]
-         zCollectorPlugins: [itri.Bmc]
-         zDeviceTemplates: [Device, BMC]
       templates:
          BMC:
             description: Monitoring BMC Devices
-            targetPythonClass: ZenPacks.itri.BmcMonitor.BmcServer
+            targetPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
             datasources:
                powerStatus:
                   type: Python
