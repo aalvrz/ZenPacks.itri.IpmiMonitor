@@ -8,7 +8,7 @@ AUTHOR = "Jaime Alvarez (jalvarez@itri.org.tw)"
 LICENSE = "GPL"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.itri']
 PACKAGES = ['ZenPacks', 'ZenPacks.itri', 'ZenPacks.itri.BmcMonitor']
-INSTALL_REQUIRES = []
+INSTALL_REQUIRES = ['ZenPacks.itri.ServerMonitor', 'ZenPacks.zenoss.PythonCollector']
 COMPAT_ZENOSS_VERS = ""
 PREV_ZENPACK_NAME = ""
 # STOP_REPLACEMENTS
