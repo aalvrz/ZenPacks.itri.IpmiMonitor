@@ -1,5 +1,3 @@
-"""Monitors BMC conditions"""
-
 import logging
 log = logging.getLogger('zen.BmcMonitor')
 
@@ -11,17 +9,18 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
      PythonDataSourcePlugin,
      )
 
-import subprocess
+from ZenPacks.itri.BmcMonitor.lib.ipmitool import get_power_status
+
 
 class BmcPowerStatus(PythonDataSourcePlugin):
     """BMC power status data source plugin."""
-    
+
     proxy_attributes = (
         'zBmcAddress',
         'zIpmiUsername',
         'zIpmiPassword',
     )
- 
+
     @classmethod
     def config_key(cls, datasource, context):
         return (
@@ -38,58 +37,49 @@ class BmcPowerStatus(PythonDataSourcePlugin):
             'zIpmiUsername': context.zIpmiUsername,
             'zIpmiPassword': context.zIpmiPassword,
             }
-    
+
     @inlineCallbacks
     def collect(self, config):
         log.info("Collecting BMC Power Status for {0}".format(config.id))
 
+        data = self.new_data()
         ds0 = config.datasources[0]
-        results = {}
 
         # Collect using ipmitool
-        power_status = False
-        cmd_result = ''
         try:
-            cmd = 'ipmitool -H {0} -I lanplus -U {1} -P {2} power status'.format(ds0.zBmcAddress, ds0.zIpmiUsername, ds0.zIpmiPassword)
-            cmd_result = yield subprocess.check_output(cmd, shell=True).rstrip()
-            log.info('Power Status for Device {0}: {1}'.format(ds0.zBmcAddress, cmd_result))
+            power_status = yield get_power_status(
+                ds0.zBmcAddress, ds0.zIpmiUsername, ds0.zIpmiPassword)
+
+            log.info('Power Status for Device {0}: {1}'.format(
+                ds0.zBmcAddress, power_status))
         except Exception as e:
             log.error('{0}: {1}'.format(ds0.zBmcAddress, e))
-
-        if cmd_result == 'Chassis Power is on':
-            power_status = True
-
-        results['power_status'] = power_status
-
-        returnValue(results)
-
-    def onSuccess(self, result, config):
-        data = self.new_data()
-
-        power_status = result['power_status']
+            returnValue(None)
 
         data['maps'].append(
             ObjectMap({
-                'modname': 'ZenPacks.itri.BmcMonitor.BmcServer',
+                'modname': 'ZenPacks.itri.ServerMonitor.ItriServer',
                 'power_status': power_status,
                 }))
-                
+
         if power_status:
-            data['events'].append({
-                'device': config.id,
-                'summary': '{0} BMC power status is now UP'.format(config.id),
-                'severity': ZenEventClasses.Clear,
-                'eventClassKey': 'bmcPowerStatus',
-                })
+            summary = '{0} BMC power status is now UP'.format(config.id)
+            severity = ZenEventClasses.Clear
         else:
-            data['events'].append({
-                'device': config.id,
-                'summary': '{0} BMC power status is DOWN!'.format(config.id),
-                'severity': ZenEventClasses.Critical,
-                'eventClassKey': 'bmcPowerStatus',
-                })
-        
+            summary = '{0} BMC power status is DOWN!'.format(config.id)
+            severity = ZenEventClasses.Critical
+
         data['events'].append({
+            'device': config.id,
+            'summary': summary,
+            'severity': severity,
+            'eventClassKey': 'bmcPowerStatus',
+            })
+
+        returnValue(data)
+
+    def onSuccess(self, result, config):
+        result['events'].append({
             'device': config.id,
             'summary': 'BMC Power Status Collector: successful collection',
             'severity': ZenEventClasses.Clear,
@@ -97,13 +87,19 @@ class BmcPowerStatus(PythonDataSourcePlugin):
             'eventClassKey': 'bmcMonitorFailure',
             })
 
-        return data
-        
+        return result
+
     def onError(self, result, config):
-        errmsg = 'BMC Power Status Collector: Error trying to collect.'
+        errmsg = 'Error trying to collect BMC power status.'
         log.error('{0}: {1}'.format(config.id, errmsg))
-        
+
         data = self.new_data()
+
+        data['maps'].append(
+            ObjectMap({
+                'modname': 'ZenPacks.itri.ServerMonitor.ItriServer',
+                'power_status': False,
+                }))
 
         data['events'].append({
             'device': config.id,
