@@ -13,9 +13,9 @@ Ext.onReady(function() {
     });
 
     detailBar.addDeviceDetailBarItem(powerStatusItem, function(bar, data) {
-        detailBar.pstatusitem.setText(data.power_status);
+        detailBar.pstatusitem.setText(Zenoss.render.pingStatusLarge(data.powerStatus));
     },
-    ['power_status']);
+    ['powerStatus']);
 
   });
 });

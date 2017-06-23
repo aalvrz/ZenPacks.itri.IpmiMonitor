@@ -37,7 +37,7 @@ class Bmc(PythonPlugin):
             returnValue(None)
 
         returnValue(self.objectMap({
-            'power_status': power_status,
+            'powerStatus': power_status,
             }))
 
     def process(self, device, results, log):

@@ -59,7 +59,7 @@ class BmcPowerStatus(PythonDataSourcePlugin):
         data['maps'].append(
             ObjectMap({
                 'modname': 'ZenPacks.itri.ServerMonitor.ItriServer',
-                'power_status': power_status,
+                'powerStatus': power_status,
                 }))
 
         if power_status:
@@ -98,7 +98,7 @@ class BmcPowerStatus(PythonDataSourcePlugin):
         data['maps'].append(
             ObjectMap({
                 'modname': 'ZenPacks.itri.ServerMonitor.ItriServer',
-                'power_status': False,
+                'powerStatus': False,
                 }))
 
         data['events'].append({
