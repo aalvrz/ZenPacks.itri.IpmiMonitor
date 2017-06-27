@@ -1,6 +1,6 @@
-# ZenPacks.itri.BmcMonitor
+# ZenPacks.itri.IpmiMonitor
 
-Monitor BMC status of servers.
+Monitor BMC power status of servers and other data using ipmitool.
 
 ## Configuration
 

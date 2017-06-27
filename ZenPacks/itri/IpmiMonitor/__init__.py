@@ -2,7 +2,7 @@ from ZenPacks.zenoss.ZenPackLib import zenpacklib
 CFG = zenpacklib.load_yaml()
 
 import logging
-log = logging.getLogger('zen.BmcMonitor')
+log = logging.getLogger('zen.IpmiMonitor')
 
 schema = CFG.zenpack_module.schema
 

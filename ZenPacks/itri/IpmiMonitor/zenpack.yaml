@@ -1,4 +1,4 @@
-name: ZenPacks.itri.BmcMonitor
+name: ZenPacks.itri.IpmiMonitor
 
 zProperties:
   zBmcAddress:
@@ -27,5 +27,5 @@ device_classes:
         datasources:
           powerStatus:
             type: Python
-            plugin_classname: ZenPacks.itri.BmcMonitor.dsplugins.BmcPowerStatus
+            plugin_classname: ZenPacks.itri.IpmiMonitor.dsplugins.BmcPowerStatus
             cycletime: 30

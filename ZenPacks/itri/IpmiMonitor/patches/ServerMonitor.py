@@ -1,5 +1,5 @@
 import logging
-log = logging.getLogger('zen.BmcMonitor')
+log = logging.getLogger('zen.IpmiMonitor')
 
 from Products.Zuul.infos import ProxyProperty
 

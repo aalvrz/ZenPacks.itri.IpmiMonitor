@@ -1,5 +1,5 @@
 import logging
-log = logging.getLogger('zen.BmcMonitor')
+log = logging.getLogger('zen.IpmiMonitor')
 
 from twisted.internet.defer import inlineCallbacks, returnValue
 
@@ -9,7 +9,7 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
      PythonDataSourcePlugin,
      )
 
-from ZenPacks.itri.BmcMonitor.lib.ipmitool import get_power_status
+from ZenPacks.itri.IpmiMonitor.lib.ipmitool import get_power_status
 
 
 class BmcPowerStatus(PythonDataSourcePlugin):
@@ -27,7 +27,7 @@ class BmcPowerStatus(PythonDataSourcePlugin):
             context.device().id,
             datasource.getCycleTime(context),
             context.id,
-            'bmcmonitor-powerstatus',
+            'ipmimonitor-powerstatus',
             )
 
     @classmethod

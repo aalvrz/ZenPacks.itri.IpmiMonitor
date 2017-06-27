@@ -2,12 +2,12 @@
 # These variables are overwritten by Zenoss when the ZenPack is exported
 # or saved.  Do not modify them directly here.
 # NB: PACKAGES is deprecated
-NAME = "ZenPacks.itri.BmcMonitor"
+NAME = "ZenPacks.itri.IpmiMonitor"
 VERSION = "1.0.0"
 AUTHOR = "Jaime Alvarez (jalvarez@itri.org.tw)"
 LICENSE = "GPL"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.itri']
-PACKAGES = ['ZenPacks', 'ZenPacks.itri', 'ZenPacks.itri.BmcMonitor']
+PACKAGES = ['ZenPacks', 'ZenPacks.itri', 'ZenPacks.itri.IpmiMonitor']
 INSTALL_REQUIRES = ['ZenPacks.zenoss.ZenPackLib', 'ZenPacks.itri.ServerMonitor', 'ZenPacks.zenoss.PythonCollector']
 COMPAT_ZENOSS_VERS = ""
 PREV_ZENPACK_NAME = ""

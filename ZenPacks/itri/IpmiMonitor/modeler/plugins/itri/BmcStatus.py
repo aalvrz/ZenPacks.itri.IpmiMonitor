@@ -1,14 +1,13 @@
-"""Collects BMC information"""
+"""Collects BMC power status information"""
 
 from twisted.internet.defer import inlineCallbacks, returnValue
 from Products.DataCollector.plugins.CollectorPlugin import PythonPlugin
-from ZenPacks.itri.BmcMonitor.lib.ipmitool import get_power_status
+from ZenPacks.itri.IpmiMonitor.lib.ipmitool import get_power_status
 
 
-class Bmc(PythonPlugin):
+class BmcStatus(PythonPlugin):
     """Modeler plugin for BMC servers."""
 
-    relname = 'bmcServer'
     modname = 'ZenPacks.itri.ServerMonitor.ItriServer'
 
     deviceProperties = PythonPlugin.deviceProperties + (
