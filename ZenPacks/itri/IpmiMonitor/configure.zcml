@@ -21,5 +21,12 @@
         permission="zope2.Public"
         />
 
+    <!-- Info Adapters: Data Sources -->
+    <adapter
+        provides=".datasources.IPMIDataSource.IIPMIDataSourceInfo"
+        for=".datasources.IPMIDataSource.IPMIDataSource"
+        factory=".datasources.IPMIDataSource.IPMIDataSourceInfo"
+        />
+
 </configure>
 
