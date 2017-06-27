@@ -1,5 +1,5 @@
 import logging
-log = logging.getLogger('zen.IpmiMonitor')
+log = logging.getLogger('zen.IpmiMonitor.PowerStatus')
 
 from twisted.internet.defer import inlineCallbacks, returnValue
 
