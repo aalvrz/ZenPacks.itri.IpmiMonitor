@@ -16,16 +16,16 @@ zProperties:
     default: "admin"
 
 device_classes:
-   /Server:
-      zProperties:
-         zIpmiUsername: admin
-         zIpmiPassword: admin
-      templates:
-         BMC:
-            description: Monitoring BMC Devices
-            targetPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
-            datasources:
-               powerStatus:
-                  type: Python
-                  plugin_classname: ZenPacks.itri.BmcMonitor.dsplugins.BmcPowerStatus
-                  cycletime: 30
+  /Server:
+    zProperties:
+      zIpmiUsername: admin
+      zIpmiPassword: admin
+    templates:
+      BMC:
+        description: Monitoring BMC Devices
+        targetPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
+        datasources:
+          powerStatus:
+            type: Python
+            plugin_classname: ZenPacks.itri.BmcMonitor.dsplugins.BmcPowerStatus
+            cycletime: 30
