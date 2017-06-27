@@ -28,7 +28,7 @@ cycle time is 30 seconds.
 A power status indicator similar to the ping status indicator will be displayed 
 in the device's page:
 
-![Power Status Indicator]()
+![Power Status Indicator](screenshots/power_status.jpg)
 
 ## Dependencies
 
@@ -36,6 +36,5 @@ The following ZenPacks are required:
 
 - [ZenPacks.zenoss.ZenPackLib
 v2](https://www.zenoss.com/product/zenpacks/zenpacklib)
-- 
-[ZenPacks.zenoss.PythonCollector](https://www.zenoss.com/product/zenpacks/pythoncollector)
+- [ZenPacks.zenoss.PythonCollector](https://www.zenoss.com/product/zenpacks/pythoncollector)
 - ZenPacks.itri.ServerMonitor v2+
