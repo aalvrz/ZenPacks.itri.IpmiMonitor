@@ -1,5 +1,5 @@
 import logging
-log = logging.getLogger('zen.IpmiMonitor.PowerStatus')
+log = logging.getLogger('zen.IpmiMonitor')
 
 from twisted.internet.defer import inlineCallbacks, returnValue
 
@@ -9,7 +9,8 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
      PythonDataSourcePlugin,
      )
 
-from ZenPacks.itri.IpmiMonitor.lib.ipmitool import get_power_status
+from ZenPacks.itri.IpmiMonitor.exceptions import IpmitoolError
+from ZenPacks.itri.IpmiMonitor.lib import ipmitool
 
 
 class BmcPowerStatus(PythonDataSourcePlugin):
@@ -55,12 +56,12 @@ class BmcPowerStatus(PythonDataSourcePlugin):
 
         # Collect using ipmitool
         try:
-            power_status = yield get_power_status(
+            power_status = yield ipmitool.get_power_status(
                 ip, ds0.zIpmiUsername, ds0.zIpmiPassword)
 
             log.info('Power Status for Device {0}: {1}'.format(
                 ds0.zBmcAddress, power_status))
-        except Exception as e:
+        except IpmitoolError as e:
             log.error('{0}: {1}'.format(ds0.zBmcAddress, e))
             returnValue(None)
 
@@ -118,3 +119,49 @@ class BmcPowerStatus(PythonDataSourcePlugin):
             })
 
         return data
+
+
+class PowerSupplyDataSourcePlugin(PythonDataSourcePlugin):
+    """Collect power supply status using ipmitool"""
+
+    proxy_attributes = (
+        'zIpmiUsername',
+        'zIpmiPassword',
+    )
+
+    @classmethod
+    def config_key(cls, datasource, context):
+        return (
+            context.device().id,
+            datasource.getCycleTime(context),
+            context.id,
+            'ipmimonitor-powersupply',
+            )
+
+    @classmethod
+    def params(cls, datasource, context):
+        return {}
+
+    @inlineCallbacks
+    def collect(self, config):
+        log.info('Collecting for IPMI power supply data source {0}'.format(
+            config.id))
+
+        data = self.new_data()
+        ds0 = config.datasources[0]
+
+        try:
+            power_supply = yield ipmitool.get_power_supply(
+                config.id, ds0.zIpmiUsername, ds0.zIpmiPassword)
+        except IpmitoolError as e:
+            log.error('{0}: {1}'.format(config.id, e))
+            returnValue(None)
+
+        for dp, val in power_supply.iteritems():
+            dpname = '_'.join((ds0.datasource, dp))
+
+            log.debug('{0}: {1}'.format(dpname, val))
+            data['values'][None][dpname] = (int('Presence' == val), 'N')
+
+        returnValue(data)
+        

@@ -77,8 +77,8 @@ device_classes:
               cpu2_temp:
                 rrdtype: GAUGE
           powerSupply:
-            type: IPMI
-            command: sdr type Power Supply
+            type: Python
+            plugin_classname: ZenPacks.itri.IpmiMonitor.dsplugins.PowerSupplyDataSourcePlugin
             cycletime: 300
             datapoints:
               psu1:
@@ -144,3 +144,21 @@ device_classes:
                 lineWidth: 2
                 format: "%2.2lf"
                 color: ff987d
+          Power Supply Status:
+            units: "up/down"
+            miny: 0
+            maxy: 1
+            graphpoints:
+              psu1:
+                dpName: powerSupply_psu1
+                format: "%2.0lf"
+              psu2:
+                dpName: powerSupply_psu2
+                format: "%2.0lf"
+              psu3:
+                dpName: powerSupply_psu3
+                format: "%2.0lf"
+              psu4:
+                dpName: powerSupply_psu4
+                format: "%2.0lf"
+          
