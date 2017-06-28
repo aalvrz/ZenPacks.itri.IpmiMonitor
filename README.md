@@ -4,7 +4,10 @@ Monitor BMC power status of servers and other data using ipmitool.
 
 ## Configuration
 
-A valid BMC IP address must be added to the devices that wished to be monitored. 
+Devices located in the `/Server/BMC` device class will automatically start
+collecting BMC power status. For devices that are not in the `/Server/BMC` 
+device class, a valid BMC IP address must be configured.
+
 Additionally, valid ipmitool username and password credentials must be 
 configured as well. All these configurations are handled through the following 
 zProperties:
@@ -29,6 +32,10 @@ A power status indicator similar to the ping status indicator will be displayed
 in the device's page:
 
 ![Power Status Indicator](screenshots/power_status.jpg)
+
+For devices located in `/Server/BMC`, ipmitool will be used as collection
+method for *current*, *voltage*, *temperature*, and *power supply* data
+sources.
 
 ## Dependencies
 
