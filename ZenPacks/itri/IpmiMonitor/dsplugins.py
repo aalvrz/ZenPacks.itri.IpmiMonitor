@@ -36,6 +36,7 @@ class BmcPowerStatus(PythonDataSourcePlugin):
             'zBmcAddress': context.zBmcAddress,
             'zIpmiUsername': context.zIpmiUsername,
             'zIpmiPassword': context.zIpmiPassword,
+            'deviceClass': context.getDeviceClassName(),
             }
 
     @inlineCallbacks
@@ -45,10 +46,17 @@ class BmcPowerStatus(PythonDataSourcePlugin):
         data = self.new_data()
         ds0 = config.datasources[0]
 
+        # Use zBmcAddress property if the device is not in /Server/BMC
+        # device class. Otherwise use device's own IP address.
+        if "BMC" in ds0.params['deviceClass']:
+            ip = config.id
+        else:
+            ip = ds0.zBmcAddress
+
         # Collect using ipmitool
         try:
             power_status = yield get_power_status(
-                ds0.zBmcAddress, ds0.zIpmiUsername, ds0.zIpmiPassword)
+                ip, ds0.zIpmiUsername, ds0.zIpmiPassword)
 
             log.info('Power Status for Device {0}: {1}'.format(
                 ds0.zBmcAddress, power_status))
