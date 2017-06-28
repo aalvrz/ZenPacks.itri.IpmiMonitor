@@ -29,3 +29,118 @@ device_classes:
             type: Python
             plugin_classname: ZenPacks.itri.IpmiMonitor.dsplugins.BmcPowerStatus
             cycletime: 30
+            
+  /Server/BMC:
+    remove: true
+    zProperties:
+      zPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
+      zSnmpMonitorIgnore: true
+      zDeviceTemplates:
+        - IPMI
+        - BMC
+      zCollectorPlugins:
+        - itri.BmcStatus
+    templates:
+      IPMI:
+        description: Ipmitool monitoring
+        targetPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
+        datasources:
+          current:
+            type: IPMI
+            command: sdr type Current
+            cycletime: 300
+            datapoints:
+              current:
+                rrdtype: GAUGE
+          voltage:
+            type: IPMI
+            command: sdr type Voltage
+            cycletime: 300
+            datapoints:
+              vbat:
+                rrdtype: GAUGE
+              5v:
+                rrdtype: GAUGE
+              3.3v:
+                rrdtype: GAUGE
+              12v:
+                rrdtype: GAUGE
+          temperature:
+            type: IPMI
+            command: sdr type Temperature
+            cycletime: 300
+            datapoints:
+              inlettemp:
+                rrdtype: GAUGE
+              cpu1_temp:
+                rrdtype: GAUGE
+              cpu2_temp:
+                rrdtype: GAUGE
+          powerSupply:
+            type: IPMI
+            command: sdr type Power Supply
+            cycletime: 300
+            datapoints:
+              psu1:
+                rrdtype: GAUGE
+              psu2:
+                rrdtype: GAUGE
+              psu3:
+                rrdtype: GAUGE
+              psu4:
+                rrdtype: GAUGE
+
+        graphs:
+          Current:
+            units: "Amps"
+            miny: 0
+            maxy: 20
+            graphpoints:
+              current:
+                dpName: current_current
+                lineType: AREA
+                format: "%2.2lf"
+                color: fbdf47
+          Voltage:
+            units: "Volts"
+            miny: 0
+            maxy: 20
+            graphpoints:
+              vbat:
+                dpName: voltage_vbat
+                lineWidth: 2
+                format: "%2.2lf"                
+              voltage(5v):
+                dpName: voltage_5v
+                lineWidth: 2
+                format: "%2.2lf"
+                color: fb8a29
+              voltage(3v):
+                dpName: voltage_3.3v
+                lineWidth: 2
+                format: "%2.2lf"
+                color: fbdf47
+              voltage(12v):
+                dpName: voltage_12v
+                lineWidth: 2
+                format: "%2.2lf"
+                color: e34f1c
+          Temperature:
+            units: "degrees C"
+            miny: 0
+            maxy: 40
+            graphpoints:
+              inlet_temp:
+                dpName: temperature_inlettemp
+                lineWidth: 2
+                format: "%2.2lf"
+              cpu1_temp:
+                dpName: temperature_cpu1_temp
+                lineWidth: 2
+                format: "%2.2lf"
+                color: ffc284
+              cpu2_temp:
+                dpName: temperature_cpu2_temp
+                lineWidth: 2
+                format: "%2.2lf"
+                color: ff987d
