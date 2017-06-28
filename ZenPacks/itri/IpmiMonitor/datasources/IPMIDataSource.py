@@ -8,6 +8,7 @@ from twisted.internet.defer import inlineCallbacks, returnValue
 from zope.component import adapts
 from zope.interface import implements
 
+from Products.ZenEvents import ZenEventClasses
 from Products.Zuul.form import schema
 from Products.Zuul.infos import ProxyProperty
 from Products.Zuul.utils import ZuulMessageFactory as _t
@@ -15,6 +16,9 @@ from Products.Zuul.utils import ZuulMessageFactory as _t
 from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
     PythonDataSource, PythonDataSourcePlugin, PythonDataSourceInfo,
     IPythonDataSourceInfo)
+
+from ZenPacks.itri.IpmiMonitor.lib.ipmitool import parse_ipmi
+
 
 class IPMIDataSource(PythonDataSource):
     """Data source used to capture data with ipmitool"""
@@ -78,14 +82,15 @@ class IPMIDataSourceInfo(PythonDataSourceInfo):
     testable = True
 
 
-class IIPMIDataSourcePlugin(PythonDataSourcePlugin):
+class IPMIDataSourcePlugin(PythonDataSourcePlugin):
 
     @classmethod
     def config_key(cls, datasource, context):
         return (
             context.device().id,
             datasource.getCycleTime(context),
-            datasource.plugin_classname
+            context.id,
+            datasource.plugin_classname,
         )
 
     @classmethod
@@ -94,35 +99,52 @@ class IIPMIDataSourcePlugin(PythonDataSourcePlugin):
             'command': datasource.talesEval(datasource.command, context),
             'ipAddress': datasource.talesEval(datasource.ipAddress, context),
             'ipmiUser': datasource.talesEval(datasource.ipmiUser, context),
-            'ipmiPassword': datasource.talesEval(datasource.ipmiPassword, context)
+            'ipmiPassword': datasource.talesEval(datasource.ipmiPassword, context),
         }        
 
     @inlineCallbacks
     def collect(self, config):
-        log.info('Collecting current for {0}'.format(config.id))
-        ds0 = config.datasources[0]
+        log.info('Collect for IPMI data source {0}'.format(config.id))
 
-        base_cmd = 'ipmitool -H {0} -I lanplus -U {1} -P {2} '.format(
-            ds0.params['ipAddress'], ds0.params['ipmiUser'], ds0.params['ipmiPassword'])
-        cmd = base_cmd + ds0.params['command']
-        
         data = self.new_data()
 
-        try:
-            r = yield subprocess.check_output(cmd, shell=True).rstrip()
-        except subprocess.CalledProcessError as e:
-            log.error('{0}: {1}'.format(config.id, e))
-            returnValue(None)
+        for ds in config.datasources:
+            base_cmd = 'ipmitool -H {0} -I lanplus -U {1} -P {2} '.format(
+                ds.params['ipAddress'], ds.params['ipmiUser'], ds.params['ipmiPassword'])
 
-        # Parse the result
-        # Format of ipmitool output is something like:
-        # CURRENT | 56h | ok | 7.35 | 8.40 Amps
+            cmd = base_cmd + ds.params['command']
+        
+            try:
+                r = yield subprocess.check_output(cmd, shell=True).rstrip()
+            except subprocess.CalledProcessError as e:
+                log.error('{0}: {1}'.format(config.id, e))
+                returnValue(None)
 
-        data['values'][ds0.component][ds0] = (5.90, 'N')
+            # Parse the result
+            # Format of ipmitool output is something like:
+            #
+            # CURRENT | 56h | ok | 7.35 | 8.40 Amps
+            #
+            # However, the 1st value in lowercase is used as the data point
+            # name
+            #data['values'][ds.component][ds.datasource] = (5.90, 'N')
+            for dp, val in parse_ipmi(r).iteritems():
+                dpname = '_'.join((ds.datasource, dp))
+
+                log.debug('{0}: {1}'.format(dpname, val))
+                data['values'][None][dpname] = (val, 'N')
 
         returnValue(data)
 
     def onSuccess(self, result, config):
+        result['events'].append({
+            'device': config.id,
+            'summary': 'IPMI Collector: Successful collection',
+            'severity': ZenEventClasses.Clear,
+            'eventKey': 'ipmiCollectionError',
+            'eventClassKey': 'ipmiMonitorFailure',
+        })
+        
         return result
 
     def onError(self, result, config):
@@ -131,5 +153,12 @@ class IIPMIDataSourcePlugin(PythonDataSourcePlugin):
         log.error('{0}: {1}'.format(config.id, errmsg))
         
         data = self.new_data()
+        data['events'].append({
+            'device': config.id,
+            'summary': errmsg,
+            'severity': ZenEventClasses.Error,
+            'eventKey': 'ipmiCollectionError',            
+            'eventClassKey': 'ipmiMonitorFailure',
+        })
 
         return data
