@@ -151,14 +151,18 @@ device_classes:
             graphpoints:
               psu1:
                 dpName: powerSupply_psu1
-                format: "%2.0lf"
+                lineWidth: 2
+                format: "%2.0lf"                
               psu2:
                 dpName: powerSupply_psu2
+                lineWidth: 2
                 format: "%2.0lf"
               psu3:
                 dpName: powerSupply_psu3
+                lineWidth: 2
                 format: "%2.0lf"
-              psu4:
+              psu4:              
                 dpName: powerSupply_psu4
+                lineWidth: 2
                 format: "%2.0lf"
           
