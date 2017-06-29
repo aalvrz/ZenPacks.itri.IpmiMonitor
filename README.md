@@ -35,7 +35,9 @@ in the device's page:
 
 For devices located in `/Server/BMC`, ipmitool will be used as collection
 method for *current*, *voltage*, *temperature*, and *power supply* data
-sources.
+sources:
+
+![Data Graphs](screenshots/ipmi_graphs.jpg)
 
 ## Dependencies
 
