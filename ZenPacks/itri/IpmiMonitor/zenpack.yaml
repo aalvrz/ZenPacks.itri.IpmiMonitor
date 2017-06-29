@@ -38,8 +38,8 @@ device_classes:
       zDeviceTemplates:
         - IPMI
         - BMC
-      zCollectorPlugins:
-        - itri.BmcStatus
+      #zCollectorPlugins:
+      #  - itri.BmcStatus
     templates:
       IPMI:
         description: Ipmitool monitoring

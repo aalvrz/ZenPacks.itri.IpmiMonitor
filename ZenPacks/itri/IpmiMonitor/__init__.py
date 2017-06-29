@@ -13,7 +13,7 @@ BMC_TEMPLATES = ['BMC']
 class ZenPack(schema.ZenPack):
 
     def install(self, app):
-        self._update_plugins('/Server/SSH/Linux/NovaHost')
+        #self._update_plugins('/Server/SSH/Linux/NovaHost')
         self._update_templates('/Server/SSH/Linux/NovaHost')
 
         super(ZenPack, self).install(app)
