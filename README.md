@@ -41,6 +41,10 @@ sources:
 
 ## Dependencies
 
+The following programs are required:
+
+- ipmitool
+
 The following ZenPacks are required:
 
 - [ZenPacks.zenoss.ZenPackLib
