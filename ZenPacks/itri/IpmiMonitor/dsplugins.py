@@ -60,9 +60,9 @@ class BmcPowerStatus(PythonDataSourcePlugin):
                 ip, ds0.zIpmiUsername, ds0.zIpmiPassword)
 
             log.info('Power Status for Device {0}: {1}'.format(
-                ds0.zBmcAddress, power_status))
+                ip, power_status))
         except IpmitoolError as e:
-            log.error('{0}: {1}'.format(ds0.zBmcAddress, e))
+            log.error('{0}: {1}'.format(ip, e))
             returnValue(None)
 
         data['maps'].append(
