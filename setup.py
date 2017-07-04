@@ -8,7 +8,7 @@ AUTHOR = "Jaime Alvarez (jalvarez@itri.org.tw)"
 LICENSE = "GPL"
 NAMESPACE_PACKAGES = ['ZenPacks', 'ZenPacks.itri']
 PACKAGES = ['ZenPacks', 'ZenPacks.itri', 'ZenPacks.itri.IpmiMonitor']
-INSTALL_REQUIRES = ['ZenPacks.zenoss.ZenPackLib', 'ZenPacks.itri.ServerMonitor', 'ZenPacks.zenoss.PythonCollector']
+INSTALL_REQUIRES = ['ZenPacks.zenoss.ZenPackLib', 'ZenPacks.itri.ServerMonitor>= 2.4.0', 'ZenPacks.zenoss.PythonCollector>= 1.8.1']
 COMPAT_ZENOSS_VERS = ""
 PREV_ZENPACK_NAME = ""
 # STOP_REPLACEMENTS
