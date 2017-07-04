@@ -36,7 +36,7 @@ device_classes:
       zPythonClass: ZenPacks.itri.ServerMonitor.ItriServer
       zSnmpMonitorIgnore: true
       zDeviceTemplates:
-        - IPMI
+        #- IPMI
         - BMC
       #zCollectorPlugins:
       #  - itri.BmcStatus
