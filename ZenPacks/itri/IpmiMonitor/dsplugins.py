@@ -9,7 +9,6 @@ from ZenPacks.zenoss.PythonCollector.datasources.PythonDataSource import (
      PythonDataSourcePlugin,
      )
 
-from ZenPacks.itri.IpmiMonitor.exceptions import IpmitoolError
 from ZenPacks.itri.IpmiMonitor.lib import ipmitool
 
 
@@ -61,7 +60,7 @@ class BmcPowerStatus(PythonDataSourcePlugin):
 
             log.info('Power Status for Device {0}: {1}'.format(
                 ds0.zBmcAddress, power_status))
-        except IpmitoolError as e:
+        except Exception as e:
             log.error('{0}: {1}'.format(ds0.zBmcAddress, e))
             returnValue(None)
 
@@ -153,7 +152,7 @@ class PowerSupplyDataSourcePlugin(PythonDataSourcePlugin):
         try:
             power_supply = yield ipmitool.get_power_supply(
                 config.id, ds0.zIpmiUsername, ds0.zIpmiPassword)
-        except IpmitoolError as e:
+        except Exception as e:
             log.error('{0}: {1}'.format(config.id, e))
             returnValue(None)
 
